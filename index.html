@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BulBak V2</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+:root{
+  --bg:#f4f5ff;
+  --card:#ffffff;
+  --text:#1f1f1f;
+  --muted:#666;
+  --accent:#7c3aed;
+}
+.dark{
+  --bg:#0f0f14;
+  --card:#1a1a23;
+  --text:#f1f1f1;
+  --muted:#aaa;
+  --accent:#a78bfa;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:linear-gradient(135deg,var(--bg),#e8e8ff);
+  font-family:Poppins,sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  transition:.3s;
+}
+
+.container{
+  background:var(--card);
+  padding:32px;
+  border-radius:24px;
+  width:100%;
+  max-width:420px;
+  box-shadow:0 20px 40px rgba(0,0,0,.12);
+  text-align:center;
+  animation:fadeUp .8s ease;
+}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.logo{
+  font-size:34px;
+  font-weight:600;
+  color:var(--accent);
+}
+.subtitle{
+  color:var(--muted);
+  margin-bottom:24px;
+}
+
+input{
+  width:100%;
+  padding:14px 18px;
+  border-radius:14px;
+  border:1px solid #ddd;
+  font-size:16px;
+  outline:none;
+}
+.dark input{
+  background:#111;
+  color:white;
+  border-color:#333;
+}
+
+.buttons{
+  margin-top:14px;
+}
+button{
+  padding:10px 18px;
+  border-radius:12px;
+  border:none;
+  cursor:pointer;
+  margin:4px;
+  background:var(--accent);
+  color:white;
+}
+button.secondary{
+  background:transparent;
+  border:1px solid var(--accent);
+  color:var(--accent);
+}
+
+#sonuc,#gecmis{
+  margin-top:20px;
+  text-align:left;
+  font-size:14px;
+}
+#gecmis div{
+  cursor:pointer;
+  color:var(--muted);
+}
+a{
+  display:block;
+  margin-top:6px;
+  color:var(--accent);
+  text-decoration:none;
+}
+
+@media(max-width:480px){
+  .container{margin:16px}
+  .logo{font-size:28px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="logo">BulBak <small>V2</small></div>
+  <div class="subtitle">Aradığını hızlıca bul</div>
+
+  <input id="arama" placeholder="Bir şey yaz..."
+    onkeydown="if(event.key==='Enter') ara()">
+
+  <div class="buttons">
+    <button onclick="ara()">Ara</button>
+    <button class="secondary" onclick="tema()">🌙</button>
+  </div>
+
+  <div id="sonuc"></div>
+  <div id="gecmis"></div>
+</div>
+
+<script>
+let gecmis = JSON.parse(localStorage.getItem("gecmis")) || [];
+
+function ara(){
+  let k = arama.value.trim();
+  if(!k) return;
+
+  if(!gecmis.includes(k)){
+    gecmis.unshift(k);
+    if(gecmis.length>5) gecmis.pop();
+    localStorage.setItem("gecmis",JSON.stringify(gecmis));
+  }
+
+  listele();
+  sonuc.innerHTML="🔎 Wikipedia'da aranıyor...";
+
+  fetch("https://tr.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(k))
+  .then(r=>r.json())
+  .then(d=>{
+    if(!d.extract){
+      sonuc.innerHTML="Sonuç bulunamadı.";
+      return;
+    }
+    sonuc.innerHTML=`
+      <strong>${d.title}</strong>
+      <p>${d.extract}</p>
+      <a href="${d.content_urls.desktop.page}" target="_blank">Wikipedia'da aç</a>
+    `;
+  });
+}
+
+function listele(){
+  gecmisDiv.innerHTML="<strong>Geçmiş</strong><br>";
+  gecmis.forEach(x=>{
+    gecmisDiv.innerHTML+=`<div onclick="arama.value='${x}';ara()">${x}</div>`;
+  });
+}
+
+function tema(){
+  document.body.classList.toggle("dark");
+}
+
+listele();
+</script>
+
+</body>
+</html>
