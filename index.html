@@ -4,178 +4,192 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BulBak V2</title>
-
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    /* Genel tasarım */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f2f2f2;
+        color: #111;
+        transition: background-color 0.3s, color 0.3s;
+    }
 
-:root{
-  --bg:#f4f5ff;
-  --card:#ffffff;
-  --text:#1f1f1f;
-  --muted:#666;
-  --accent:#7c3aed;
-}
-.dark{
-  --bg:#0f0f14;
-  --card:#1a1a23;
-  --text:#f1f1f1;
-  --muted:#aaa;
-  --accent:#a78bfa;
-}
+    /* Karanlık mod */
+    body.dark {
+        background-color: #121212;
+        color: #f5f5f5;
+    }
 
-body{
-  margin:0;
-  min-height:100vh;
-  background:linear-gradient(135deg,var(--bg),#e8e8ff);
-  font-family:Poppins,sans-serif;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  transition:.3s;
-}
+    .container {
+        max-width: 600px;
+        margin: 100px auto 0 auto;
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
+        transition: background 0.3s, box-shadow 0.3s;
+    }
 
-.container{
-  background:var(--card);
-  padding:32px;
-  border-radius:24px;
-  width:100%;
-  max-width:420px;
-  box-shadow:0 20px 40px rgba(0,0,0,.12);
-  text-align:center;
-  animation:fadeUp .8s ease;
-}
+    body.dark .container {
+        background: #1e1e1e;
+        box-shadow: 0px 5px 20px rgba(0,0,0,0.5);
+    }
 
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:translateY(0)}
-}
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
 
-.logo{
-  font-size:34px;
-  font-weight:600;
-  color:var(--accent);
-}
-.subtitle{
-  color:var(--muted);
-  margin-bottom:24px;
-}
+    p {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+    }
 
-input{
-  width:100%;
-  padding:14px 18px;
-  border-radius:14px;
-  border:1px solid #ddd;
-  font-size:16px;
-  outline:none;
-}
-.dark input{
-  background:#111;
-  color:white;
-  border-color:#333;
-}
+    input[type="text"] {
+        width: 80%;
+        padding: 10px;
+        font-size: 1rem;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        outline: none;
+    }
 
-.buttons{
-  margin-top:14px;
-}
-button{
-  padding:10px 18px;
-  border-radius:12px;
-  border:none;
-  cursor:pointer;
-  margin:4px;
-  background:var(--accent);
-  color:white;
-}
-button.secondary{
-  background:transparent;
-  border:1px solid var(--accent);
-  color:var(--accent);
-}
+    body.dark input[type="text"] {
+        border: 1px solid #555;
+        background: #333;
+        color: #fff;
+    }
 
-#sonuc,#gecmis{
-  margin-top:20px;
-  text-align:left;
-  font-size:14px;
-}
-#gecmis div{
-  cursor:pointer;
-  color:var(--muted);
-}
-a{
-  display:block;
-  margin-top:6px;
-  color:var(--accent);
-  text-decoration:none;
-}
+    button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-left: 5px;
+        background-color: #4CAF50;
+        color: #fff;
+        transition: background 0.3s;
+    }
 
-@media(max-width:480px){
-  .container{margin:16px}
-  .logo{font-size:28px}
-}
+    button:hover {
+        background-color: #45a049;
+    }
+
+    #darkModeBtn {
+        margin-top: 20px;
+        background-color: #333;
+    }
+
+    #darkModeBtn:hover {
+        background-color: #555;
+    }
+
+    #history {
+        margin-top: 20px;
+        text-align: left;
+        max-height: 150px;
+        overflow-y: auto;
+    }
+
+    #history li {
+        cursor: pointer;
+        padding: 5px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    body.dark #history li {
+        border-bottom: 1px solid #555;
+    }
+
+    #history li:hover {
+        background-color: #eee;
+    }
+
+    body.dark #history li:hover {
+        background-color: #444;
+    }
+
+    iframe {
+        width: 100%;
+        height: 400px;
+        border: none;
+        margin-top: 20px;
+        border-radius: 10px;
+    }
 </style>
 </head>
-
 <body>
 
 <div class="container">
-  <div class="logo">BulBak <small>V2</small></div>
-  <div class="subtitle">Aradığını hızlıca bul</div>
-
-  <input id="arama" placeholder="Bir şey yaz..."
-    onkeydown="if(event.key==='Enter') ara()">
-
-  <div class="buttons">
+    <h1>BulBak V2</h1>
+    <p>Aradığını hemen bul!</p>
+    <input type="text" id="arama" placeholder="Bir şey ara..." autocomplete="off">
     <button onclick="ara()">Ara</button>
-    <button class="secondary" onclick="tema()">🌙</button>
-  </div>
+    <button id="darkModeBtn">🌙 Karanlık Mod</button>
 
-  <div id="sonuc"></div>
-  <div id="gecmis"></div>
+    <ul id="history"></ul>
+
+    <iframe id="resultFrame"></iframe>
 </div>
 
 <script>
-let gecmis = JSON.parse(localStorage.getItem("gecmis")) || [];
+    const aramaInput = document.getElementById('arama');
+    const historyList = document.getElementById('history');
+    const resultFrame = document.getElementById('resultFrame');
 
-function ara(){
-  let k = arama.value.trim();
-  if(!k) return;
+    // Karanlık mod
+    const darkBtn = document.getElementById('darkModeBtn');
+    darkBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+    });
 
-  if(!gecmis.includes(k)){
-    gecmis.unshift(k);
-    if(gecmis.length>5) gecmis.pop();
-    localStorage.setItem("gecmis",JSON.stringify(gecmis));
-  }
-
-  listele();
-  sonuc.innerHTML="🔎 Wikipedia'da aranıyor...";
-
-  fetch("https://tr.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(k))
-  .then(r=>r.json())
-  .then(d=>{
-    if(!d.extract){
-      sonuc.innerHTML="Sonuç bulunamadı.";
-      return;
+    // Arama geçmişi
+    let historyArr = JSON.parse(localStorage.getItem('bulbakHistory')) || [];
+    function updateHistory() {
+        historyList.innerHTML = '';
+        historyArr.slice().reverse().forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            li.onclick = () => {
+                aramaInput.value = item;
+                ara();
+            };
+            historyList.appendChild(li);
+        });
     }
-    sonuc.innerHTML=`
-      <strong>${d.title}</strong>
-      <p>${d.extract}</p>
-      <a href="${d.content_urls.desktop.page}" target="_blank">Wikipedia'da aç</a>
-    `;
-  });
-}
+    updateHistory();
 
-function listele(){
-  gecmisDiv.innerHTML="<strong>Geçmiş</strong><br>";
-  gecmis.forEach(x=>{
-    gecmisDiv.innerHTML+=`<div onclick="arama.value='${x}';ara()">${x}</div>`;
-  });
-}
+    // Arama fonksiyonu
+    function ara() {
+        const kelime = aramaInput.value.trim();
+        if(kelime !== '') {
+            historyArr.push(kelime);
+            if(historyArr.length > 10) historyArr.shift();
+            localStorage.setItem('bulbakHistory', JSON.stringify(historyArr));
+            updateHistory();
+            resultFrame.src = "https://www.google.com/search?q=" + encodeURIComponent(kelime);
+        } else {
+            alert("selamlaar!");
+        }
+    }
 
-function tema(){
-  document.body.classList.toggle("dark");
-}
+    // Enter ile arama
+    aramaInput.addEventListener('keydown', function(e) {
+        if(e.key === 'Enter') ara();
+    });
 
-listele();
+    // Otomatik tamamlama (basit örnek)
+    const suggestions = ["Hava durumu", "YouTube", "Haberler", "Futbol", "Google", "Çeviri"];
+    aramaInput.addEventListener('input', () => {
+        const val = aramaInput.value.toLowerCase();
+        if(val.length > 0) {
+            const match = suggestions.find(s => s.toLowerCase().startsWith(val));
+            if(match) aramaInput.value = match;
+        }
+    });
 </script>
 
 </body>
